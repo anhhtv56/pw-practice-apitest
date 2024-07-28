@@ -6,10 +6,10 @@ const authFile = '.auth/user.json'
 
 setup('authentication', async({request}) => {
 
-    const response = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
-    data: {
-      "user":{"email":"anhautotest@test.com","password":"123456"}
-    }
+  const response = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
+  data: {
+    "user":{"email":"anhautotest@test.com","password":"123456"}
+  }
   })  
   const responseBody = await response.json()
   const accessToken = responseBody.user.token

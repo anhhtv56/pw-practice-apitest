@@ -32,12 +32,43 @@ export default defineConfig({
       'Authorization': `Token ${process.env.ACCESS_TOKEN}`
     }
   },
+  globalSetup: require.resolve('./tests/global-setup.ts'),
+  globalTeardown: require.resolve('./tests/global-teardown.ts'),  
 
   /* Configure projects for major browsers */
   projects: [
     { name: 'setup', testMatch: 'auth.setup.ts' },
+    { 
+      name: 'articleSetup', 
+      testMatch: 'newArticle.setup.ts',
+      dependencies: ['setup'],
+      teardown: 'articleCleanup'
+    },
     {
-      name: 'chromium',
+      name: 'articleCleanup',
+      testMatch: 'articleCleanup.set.ts'
+    },
+    {
+      name: 'regression',
+      testIgnore: 'likesCounter.spec.ts',
+      use: { ...devices['Desktop Chrome'], storageState: '.auth/user.json' },
+      dependencies: ['setup']
+    },
+
+    {
+      name: 'likeCounter',
+      testMatch: 'likesCounter.spec.ts',
+      use: { ...devices['Desktop Chrome'], storageState: '.auth/user.json' },
+      dependencies: ['articleSetup']
+    },
+
+    {
+      name: 'likeCounterGlobal',
+      testMatch: 'likesCounterGlobal.spec.ts',
+      use: { ...devices['Desktop Chrome'], storageState: '.auth/user.json' }
+    },
+    {
+      name: 'chrome',
       use: { ...devices['Desktop Chrome'], storageState: '.auth/user.json' },
       dependencies: ['setup']
     },
